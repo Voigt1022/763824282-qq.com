@@ -1,12 +1,98 @@
-# Knowledge Base: Rules
+# Knowledge Base:
 
-In this lab assignment, you are going to extend a knowledge base (KB) and an inference engine. The knowledge base supports three main interfaces: `Assert`, `Retract`, and `Ask`.
+
+In this project, I create a basic knowledge base (KB) to store and retrieve facts. The facts will be statements that includes predicates (e.g., Color, Size, Inst) that relate objects together.  For example:
+
+Block1 is an instance of a rectangle.
+- Inst(block1, rectangle)
+
+Block1 is red
+- Color(block1, red)
+
+Block1 is large
+- Size(block1, large)
+
+Rectangles are blocks
+- Isa(rectangle, block)
+
+The knowledge base supports three main interfaces: `Assert`, `Retract`, and `Ask`.
 
 - `Assert`: Add facts or rules into the knowledge base. After you add facts or rules into the KB, the forward-chaining algorithm is used to infer other facts or rules.
 - `Ask`: ask queries and return a list of bindings for facts.
 - `Retract`: remove facts from the knowledge base. Also, remove all other facts or rules that are dependent on the removed fact or rule.
 
-## File Breakdown
+## Starter code
+There are five files with code: `main.py`, `logical_classes.py`, `read.py`, `util.py` and `student_code.py`. (Details about these files are described at the end of this write-up.)
+
+- `main.py` contains code for testing the KnowledgeBase
+- `student_code.py` contains the `KnowledgeBase` and `InferenceEngine` classes, and is where you will be writing code.
+- `logical_classes.py` contains classes for each type of logical component, e.g. `Fact`, `Rule`, etc.
+- `util.py` contains several useful helper functions
+- `read.py` contains functions that read statements from files or terminal. (You won't need to read/explore this file.)
+
+There are also data files (e.g., `statements_kb.txt` and `statements_kb2.txt`).  These files contain the facts and rules to be inserted into the KB. The provided tests use `statements_kb4.txt`, and you may use the other files to generate your own tests.
+
+## Your task
+
+To get you started, the `Assert` and `Ask` interfaces have been written - exposed via the `KnowledgeBase.kb_assert` and `KnowledgeBase.kb_ask` methods.
+
+Your task is two-part:
+
+1. Implement the forward-chaining inferences that occurs upon asserting facts and rules into the KB - i.e., implement the `InferenceEnginer.fc_infer` method.
+2. Implement the `Retract` interface to remove facts from the KB - i.e., implement the `KnowledgeBase.kb_retract` method.
+
+### Rule currying in `fc_infer`
+
+The key idea is that we don't just infer new facts - we can infer new rules.
+
+When we add a new fact to the KB, we check to see if it triggers any rule(s). When we add a new rule, we check to see if it's triggered by existing facts.
+
+However, a rule might have multiple statements on its left-hand side (LHS), and we don't want to iterate each of these statements every time we add a new fact to the KB. Instead, we'll employ a cool trick. Whenever we add a new rule, we'll only check the first element of the LHS of that rule against the facts in our KB. (If we add a new fact, we'll reverse this - we'll examine each rule in our KB, and check the first element of its LHS against this new fact.) If there's a match with this first element, we'll add a new rule paired with *bindings* for that match.
+
+For example, imagine a box-world. Consider a rule stating that if a box `?x` is larger than another box `?y`, and box `?x` is on box `?y`, then box `?y` is covered. Formally, that looks like:
+
+```
+((sizeIsLess(?y, ?x), on(?x, ?y)) => covered(?y))
+```
+
+Now imagine that we know that box `A` is bigger than box `B`; i.e. that we have the fact `sizeIsLess(B, A)` in the KB. The above rule then matches, with the bindings `((?x: A, ?y: B))`. With that binding in place, we can now infer a new rule that uses it:
+
+```
+(on(A, B)) => covered(B)
+```
+
+If we find the fact `on(A, B)` in the KB, then we could use this rule to infer the fact `covered(B)`. If we don't have that fact, however, we now have a simple rule that will let us make the inference easily if we see that fact in the future.
+
+### Removing rules and facts inferred from a removed fact
+
+When you remove a fact, you also need to remove all facts and rules that were inferred using this fact. However, a given fact/rule might be supported by multiple facts - so, you'll need to check whether the facts/rules inferred from this fact are also supported by other facts (or if they were directly asserted).  A fact/rule that has all of its support removed and was not asserted must also be retracted, and if it were asserted then the fact/rule should remain asserted (and not be retracted).
+
+As a simplification, you can assume that **no rules will create circular dependencies**. E.g., imagine a situation like `A => B`, `B => C`, and `C => B`. Removing `A` would mean removing `B` and `C`, since they depend on `A` via those rules. However, implementing that would get messy, since `B` and `C` depend on each other. You will **NOT** be given scenarios like this.
+
+### Testing
+
+To test this lab, we'll create several testing files that contain a bunch of facts and rules (similar to the ones provided). Each fact/rule will be asserted one-by-one into the KB. Other files containing more facts/rules will be used to test the `Retract` operation, and make sure it worked correctly. *We recommend that you manually check each function and make sure you understand each function and output*. **We also recommend you make your own testing files, and feel free to share them on Piazza.**. When sharing tests, please provide your rationale to the test, explain what you hope to test and/or how you developed the test.
+
+### Hints
+
+#### Implementing `fc_infer`
+
+- Use the `util.match` function to do unification and create possible bindings
+- Use the `util.instantiate` function to bind a variable in the rest of a rule
+- `Rule`s and `Fact`s have fields for `supported_by`, `supports_facts`, and `supports_rules`. Use them to track inferences! For example, imagine that a fact `F` and rule `R` matched to infer a new fact/rule `fr`.
+  - `fr` is *supported* by `F` and `R`. Add them to `fr`'s `supported_by` list - you can do this by passing them as a constructor argument when creating `fr`.
+  - `F` and `R` now *support* `fr`. Add `fr` to the `supports_rules` and `supports_facts` lists (as appropriate) in `F` and `R`.
+
+#### Implementing `kb_retract`
+
+- A fact should only be removed if it is unsupported.
+- Use the `supports_rules` and `supports_facts` fields to find and adjust facts and rules that are supported by a retracted fact.
+  - The `supported_by` lists in each fact/rule that it supports needs to be adjusted accordingly.
+  - If a supported fact/rule is no longer supported as a result of retracting this fact (and is not asserted), it should also be removed.
+
+
+
+## Appendix: File Breakdown
 
 Below is a description of each included file and the classes contained within each including a listing of their attributes. Each file has documentation in the code reflecting the information below (in most cases they are exactly the same). As you read through the attributes follow along in the corresponding files and make sure you're understanding the descriptions.
 
