@@ -1,4 +1,4 @@
-# Assignment 2: Knowledge Base: Rules
+# Knowledge Base: Rules
 
 In this lab assignment, you are going to extend a knowledge base (KB) and an inference engine. The knowledge base supports three main interfaces: `Assert`, `Retract`, and `Ask`.
 
