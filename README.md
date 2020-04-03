@@ -1,7 +1,7 @@
 # Knowledge Base:
 
 
-In this lab assignment, you are going to create a basic knowledge base (KB) to store and retrieve facts. The facts will be statements that includes predicates (e.g., Color, Size, Inst) that relate objects together.  For example:
+In this project, I create a basic knowledge base (KB) to store and retrieve facts. The facts will be statements that includes predicates (e.g., Color, Size, Inst) that relate objects together.  For example:
 
 Block1 is an instance of a rectangle.
 - Inst(block1, rectangle)
@@ -15,20 +15,14 @@ Block1 is large
 Rectangles are blocks
 - Isa(rectangle, block)
 
-The knowledge base supports two main interfaces: `Assert`and `Ask`.
-
-- `Assert`: Add facts into the knowledge base.
-- `Ask`: ask queries and return a list of bindings for facts.
-
-In this project, you are going to extend a knowledge base (KB) and an inference engine. The knowledge base supports three main interfaces: `Assert`, `Retract`, and `Ask`.
+The knowledge base supports three main interfaces: `Assert`, `Retract`, and `Ask`.
 
 - `Assert`: Add facts or rules into the knowledge base. After you add facts or rules into the KB, the forward-chaining algorithm is used to infer other facts or rules.
 - `Ask`: ask queries and return a list of bindings for facts.
 - `Retract`: remove facts from the knowledge base. Also, remove all other facts or rules that are dependent on the removed fact or rule.
 
 ## Starter code
-
-We provide you five files with code: `main.py`, `logical_classes.py`, `read.py`, `util.py` and `student_code.py`. (Details about these files are described at the end of this write-up.)
+There are five files with code: `main.py`, `logical_classes.py`, `read.py`, `util.py` and `student_code.py`. (Details about these files are described at the end of this write-up.)
 
 - `main.py` contains code for testing the KnowledgeBase
 - `student_code.py` contains the `KnowledgeBase` and `InferenceEngine` classes, and is where you will be writing code.
