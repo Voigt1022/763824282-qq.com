@@ -21,17 +21,6 @@ The knowledge base supports three main interfaces: `Assert`, `Retract`, and `Ask
 - `Ask`: ask queries and return a list of bindings for facts.
 - `Retract`: remove facts from the knowledge base. Also, remove all other facts or rules that are dependent on the removed fact or rule.
 
-## Starter code
-There are five files with code: `main.py`, `logical_classes.py`, `read.py`, `util.py` and `student_code.py`. (Details about these files are described at the end of this write-up.)
-
-- `main.py` contains code for testing the KnowledgeBase
-- `student_code.py` contains the `KnowledgeBase` and `InferenceEngine` classes, and is where you will be writing code.
-- `logical_classes.py` contains classes for each type of logical component, e.g. `Fact`, `Rule`, etc.
-- `util.py` contains several useful helper functions
-- `read.py` contains functions that read statements from files or terminal. (You won't need to read/explore this file.)
-
-There are also data files (e.g., `statements_kb.txt` and `statements_kb2.txt`).  These files contain the facts and rules to be inserted into the KB. The provided tests use `statements_kb4.txt`, and you may use the other files to generate your own tests.
-
 ## Your task
 
 To get you started, the `Assert` and `Ask` interfaces have been written - exposed via the `KnowledgeBase.kb_assert` and `KnowledgeBase.kb_ask` methods.
