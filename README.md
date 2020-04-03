@@ -21,14 +21,7 @@ The knowledge base supports three main interfaces: `Assert`, `Retract`, and `Ask
 - `Ask`: ask queries and return a list of bindings for facts.
 - `Retract`: remove facts from the knowledge base. Also, remove all other facts or rules that are dependent on the removed fact or rule.
 
-## Your task
-
-To get you started, the `Assert` and `Ask` interfaces have been written - exposed via the `KnowledgeBase.kb_assert` and `KnowledgeBase.kb_ask` methods.
-
-Your task is two-part:
-
-1. Implement the forward-chaining inferences that occurs upon asserting facts and rules into the KB - i.e., implement the `InferenceEnginer.fc_infer` method.
-2. Implement the `Retract` interface to remove facts from the KB - i.e., implement the `KnowledgeBase.kb_retract` method.
+## Main task
 
 ### Rule currying in `fc_infer`
 
