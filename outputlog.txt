@@ -1,0 +1,12 @@
+TESTS WITH ERRORS 
+-------------------------------
+TESTS FAILED  
+test5 (gradingtests.UnitTests)
+Traceback (most recent call last):
+  File "/Users/maxtennis/Coursework/IntroToAI348/autograder/autograder-app-master/app/testing/kb2/gradingtests.py", line 151, in test5
+    self.assertTrue(len(answer4) > 0)
+AssertionError: False is not true
+
+-------------------------------
+TESTS SKIPPED 
+-------------------------------
